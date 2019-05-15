@@ -30,9 +30,8 @@ type wrappedTLS struct {
 	log         logr.Logger
 }
 
-func (w *wrappedTLS) setLogger(logger logr.Logger) error {
+func (w *wrappedTLS) setLogger(logger logr.Logger) {
 	w.log = logger
-	return nil
 }
 
 func (w *wrappedTLS) getCertificate(clientHello *tls.ClientHelloInfo) (*tls.Certificate, error) {
@@ -68,7 +67,7 @@ func (w *wrappedTLS) autoloadTLS(cert, key string) error {
 			select {
 			case event := <-watcher.Events:
 				if event.Op&fsnotify.Write == fsnotify.Write {
-					w.log.Info("reload modified TLS:", event.Name)
+					w.log.Info("loaded new TLS cert:", event.Name)
 					err := w.loadCertificate(cert, key)
 					if err != nil {
 						done <- err

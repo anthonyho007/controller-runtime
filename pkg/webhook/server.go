@@ -133,6 +133,7 @@ func (s *Server) Start(stop <-chan struct{}) error {
 	}
 
 	wrappedTLS := wrappedTLS{}
+	wrappedTLS.setLogger(baseHookLog)
 
 	err := wrappedTLS.autoloadTLS(path.Join(s.CertDir, certName), path.Join(s.CertDir, keyName))
 	if err != nil {
